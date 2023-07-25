@@ -94,7 +94,7 @@ public class ItemDetails {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     if (!line.trim().isEmpty()) {
-                        lastItemCode = line.split(";")[0]; // Assuming item code is the first field
+                        lastItemCode = line.split(";")[0]; 
                     }
                 }
                 scanner.close();
