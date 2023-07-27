@@ -1,0 +1,117 @@
+package UserLoginSystem;
+
+import java.io.*;
+import java.util.*;
+
+public class JavaAssignment {
+    private static final String FILE_PATH = "users.txt";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean loggedIn = false;
+
+        while (!loggedIn) {
+            System.out.println("Choose your login identity:");
+            System.out.println("1. Sales Manager");
+            System.out.println("2. Purchase Manager");
+            System.out.println("3. Administrator");
+            System.out.print("Enter your choice (1/2/3): ");
+            int choice = scanner.nextInt();
+
+            scanner.nextLine(); // Consume the newline left by nextInt()
+
+            switch (choice) {
+                case 1:
+                    loggedIn = loginUser("Sales Manager");
+                    break;
+                case 2:
+                    loggedIn = loginUser("Purchase Manager");
+                    break;
+                case 3:
+                    if (isAdminLoggedIn()) {
+                        System.out.println("Administrator logged in successfully.");
+                        addNewUser();
+                    } else {
+                        System.out.println("Administrator login failed. Exiting.");
+                    }
+                    loggedIn = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static boolean loginUser(String identity) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] userCredentials = line.split(",");
+                String storedIdentity = userCredentials[0].trim();
+                String storedUsername = userCredentials[1].trim();
+                String storedPassword = userCredentials[2].trim();
+
+                if (identity.equalsIgnoreCase(storedIdentity) && username.equals(storedUsername) && password.equals(storedPassword)) {
+                    System.out.println(identity + " logged in successfully.");
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the user file.");
+            e.printStackTrace();
+        }
+
+        System.out.println("Login failed. Please try again.");
+        return false;
+    }
+
+    private static boolean isAdminLoggedIn() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter administrator username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter administrator password: ");
+        String password = scanner.nextLine();
+
+        // Assuming correct Administrator credentials are "Barry" and "6789"
+        return "Barry".equalsIgnoreCase(username) && "6789".equals(password);
+    }
+
+    private static void addNewUser() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter the new user's identity (Sales Manager/Purchase Manager/Administrator): ");
+            String identity = scanner.nextLine();
+            System.out.print("Enter the new user's username: ");
+            String username = scanner.nextLine();
+            System.out.print("Enter the new user's password: ");
+            String password = scanner.nextLine();
+
+            bw.write(identity + ", " + username + ", " + password);
+            bw.newLine();
+            System.out.println("New user added successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while adding the new user.");
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+users.txt //need to open a empty file in apache and enter the data below 
+Administrator, Barry, 6789
+Administrator, Tony, 2356
+Sales Manager, Bruce, 2456
+Sales Manager, Steve, 5639
+Purchase Manager, Oliver, 1584
+Purchase Manager, Banner, 2581
