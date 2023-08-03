@@ -5,21 +5,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+public class Item {
 
-public class ItemDetails {
+    protected String ItemCode;
+    protected String ItemName;
+    protected String SupplierID;
 
-    private String ItemCode;
-    private String ItemName;
-    private String SupplierID;
-    private int StockQuantity;
-    private float UnitPrice;
-
-    public ItemDetails(String ItemCode, String ItemName, String SupplierID, int StockQuantity, float UnitPrice) {
+    public Item(String ItemCode, String ItemName, String SupplierID) {
         this.ItemCode = ItemCode;
         this.ItemName = ItemName;
         this.SupplierID = SupplierID;
-        this.StockQuantity = StockQuantity;
-        this.UnitPrice = UnitPrice;
     }
 
     public String getItemCode() {
@@ -34,17 +29,34 @@ public class ItemDetails {
         return SupplierID;
     }
 
+    @Override
+    public String toString() {
+        return ItemCode + ";" + ItemName + ";" + SupplierID + ";";
+    }
+}
+
+class ItemDetails extends Item {
+
+    protected int StockQuantity;
+    protected float UnitPrice;
+
+    public ItemDetails(String ItemCode, String ItemName, String SupplierID, int StockQuantity, float UnitPrice) {
+        super(ItemCode, ItemName, SupplierID);
+        this.StockQuantity = StockQuantity;
+        this.UnitPrice = UnitPrice;
+    }
+
     public int getStockQuantity() {
         return StockQuantity;
     }
 
-    public double getUnitPrice() {
+    public float getUnitPrice() {
         return UnitPrice;
     }
 
     @Override
     public String toString() {
-        return ItemCode + ";" + ItemName + ";" + SupplierID + ";" + StockQuantity + ";" + UnitPrice + ";";
+        return super.toString() + StockQuantity + ";" + UnitPrice + ";";
     }
 
     public static void AddItem() {
@@ -55,11 +67,17 @@ public class ItemDetails {
 
         System.out.println("Enter Item Details!\n");
 
-        String lastItemCode = getLastItemCode();
-        int numericPart = Integer.parseInt(lastItemCode.substring(1));
-        numericPart++;
-        String NewItemCode = String.format("I%05d", numericPart);
+        int numericPart;
+        String NewItemCode = null;
 
+        for (int i = 1; i <= 99999; i++) {
+            numericPart = i;
+            NewItemCode = String.format("I%05d", numericPart);
+            boolean isCodeAvailable = isItemCodeAvailable(NewItemCode);
+            if (isCodeAvailable) {
+                break;
+            }
+        }
         System.out.println("Enter Item Name: ");
         String ItemName = SC1.nextLine();
         System.out.println("Enter Supplier ID: ");
@@ -83,25 +101,156 @@ public class ItemDetails {
             System.out.println("Error!");
             e.printStackTrace();
         }
+
     }
 
-    private static String getLastItemCode() {
-        String lastItemCode = "I00000";
+    private static boolean isItemCodeAvailable(String itemCode) {
         try {
-            File file = new File("ItemDetails.txt");
-            if (file.exists()) {
-                Scanner scanner = new Scanner(file);
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    if (!line.trim().isEmpty()) {
-                        lastItemCode = line.split(";")[0]; 
+            File ItemDetails = new File("ItemDetails.txt");
+            if (ItemDetails.exists()) {
+                try (Scanner Filescanner = new Scanner(ItemDetails)) {
+                    while (Filescanner.hasNextLine()) {
+                        String line = Filescanner.nextLine();
+                        if (!line.trim().isEmpty()) {
+                            String[] itemDetails = line.split(";");
+                            if (itemDetails[0].equals(itemCode)) {
+                                return false;
+                            }
+                        }
                     }
                 }
-                scanner.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return lastItemCode;
+        return true;
+    }
+
+    public static void DeleteItem() {
+        List<ItemDetails> itemList = new ArrayList<>();
+        Scanner ItemCodeScanner = new Scanner(System.in);
+        System.out.println("Enter the item code to delete: ");
+        String ItemCodeToDelete = ItemCodeScanner.nextLine();
+        try {
+            File ItemDetails = new File("ItemDetails.txt");
+            if (ItemDetails.exists()) {
+                Scanner Filescanner = new Scanner(ItemDetails);
+                while (Filescanner.hasNextLine()) {
+                    String line = Filescanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] itemDetails = line.split(";");
+                        itemList.add(new ItemDetails(
+                                itemDetails[0],
+                                itemDetails[1],
+                                itemDetails[2],
+                                Integer.parseInt(itemDetails[3]),
+                                Float.parseFloat(itemDetails[4])
+                        ));
+                    }
+                }
+                Filescanner.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        ItemDetails ItemToDelete = null;
+        for (ItemDetails item : itemList) {
+            if (item.getItemCode().equals(ItemCodeToDelete)) {
+                ItemToDelete = item;
+                break;
+            }
+        }
+        if (ItemToDelete != null) {
+            itemList.remove(ItemToDelete);
+            try {
+                try (FileWriter writer = new FileWriter("ItemDetails.txt")) {
+                    for (ItemDetails item : itemList) {
+                        writer.write(item.toString());
+                        writer.write(System.lineSeparator());
+                    }
+                }
+                System.out.println("\nRecord deleted successfully! ");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error occurred while deleting the record.");
+            }
+        } else {
+            System.out.println("Item code not found.");
+        }
+    }
+
+    public static void EditItem() {
+        Scanner SC1 = new Scanner(System.in);
+        List<ItemDetails> Itemlist = new ArrayList<>();
+        try {
+            File ItemDetailsFile = new File("ItemDetails.txt");
+            if (ItemDetailsFile.exists()) {
+                Scanner Filescanner = new Scanner(ItemDetailsFile);
+                while (Filescanner.hasNextLine()) {
+                    String line = Filescanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] itemDetails = line.split(";");
+                        Itemlist.add(new ItemDetails(
+                                itemDetails[0],
+                                itemDetails[1],
+                                itemDetails[2],
+                                Integer.parseInt(itemDetails[3]),
+                                Float.parseFloat(itemDetails[4])
+                        ));
+                    }
+                }
+                Filescanner.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Enter the item code to edit: ");
+        String itemCodeToEdit = SC1.nextLine();
+
+        ItemDetails itemToEdit = null;
+        for (ItemDetails item : Itemlist) {
+            if (item.getItemCode().equals(itemCodeToEdit)) {
+                itemToEdit = item;
+                break;
+            }
+        }
+
+        if (itemToEdit == null) {
+            System.out.println("Item code not found.");
+            return;
+        }
+
+        System.out.println("Enter new Item Name: ");
+        String newItemName = SC1.nextLine();
+        System.out.println("Enter new Supplier ID: ");
+        String newSupplierID = SC1.nextLine();
+        System.out.println("Enter new Item Quantity: ");
+        int newStockQuantity = SC1.nextInt();
+        System.out.println("Enter new Unit Price: ");
+        float newUnitPrice = SC1.nextFloat();
+        SC1.nextLine();
+
+        itemToEdit.ItemName = newItemName;
+        itemToEdit.SupplierID = newSupplierID;
+        itemToEdit.StockQuantity = newStockQuantity;
+        itemToEdit.UnitPrice = newUnitPrice;
+
+        try {
+            try (FileWriter writer = new FileWriter("ItemDetails.txt")) {
+                for (ItemDetails item : Itemlist) {
+                    writer.write(item.toString());
+                    writer.write(System.lineSeparator());
+                }
+            }
+            System.out.println("\nRecord updated successfully! ");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error occurred while updating the record.");
+        }
     }
 }
+
