@@ -1,3 +1,4 @@
+package UserLoginSystem;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class SupplierEntry
         String ItemID = SupplierInputs.nextLine();
         
         
-        SupplierDetails Supplier = new SupplierDetails(SupplierCode, SupplierName, SupplierPhoneNumber, SupplierEmailAddress, SupplierAddress, ItemID);
+        SupplierEntry Supplier = new SupplierEntry(SupplierCode, SupplierName, SupplierPhoneNumber, SupplierEmailAddress, SupplierAddress, ItemID);
         
         boolean validInput = false;
         while(!validInput){        
