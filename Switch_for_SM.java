@@ -12,10 +12,24 @@ abstract public class Switch_for_SM {
         String bullshit = null;
         switch (UserInput) {
             case 1:
-                ItemDetails.AddItem();
+                System.out.println("Item Entry \n\n1. Add Record\n2. Edit Record \n3. Delete Record\n4. Return to previous menu");
+                Scanner ItemEntryInput = new Scanner(System.in);
+                int itemEntryInput = ItemEntryInput.nextInt();
+                switch(itemEntryInput){ 
+                    case 1: ItemDetails.AddItem();break;
+                    case 2: ItemDetails.EditItem();break;
+                    case 3: ItemDetails.DeleteItem();break;
+                    default: break;
+                }
                 break;
             case 2:
-                SupplierEntry.runSupplierEntry();
+                System.out.println("Supplier Entry \n\n1. Add Record\n2. Edit Record \n3. Delete Record\n4. Return to previous menu");
+                Scanner userMenuInput = new Scanner(System.in);
+                int UserMenuInput = userMenuInput.nextInt();
+                switch(UserMenuInput){ 
+                    case 1: SupplierDetails.runSupplierDetail();break;
+                    default: break;
+                }
                 break;
             case 3:
                 DailySales.dailyItemWiseSalesEntry();
