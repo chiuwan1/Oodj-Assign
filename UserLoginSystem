@@ -46,6 +46,13 @@ public class JavaAssignment {
 
         scanner.close();
     }
+    
+    private static String loggedInUsername = null;
+
+    // This method returns the username of the logged-in user
+    public static String getLoggedInUsername() {
+        return loggedInUsername;
+    }
 
     private static boolean loginUser(String identity) {
         Scanner scanner = new Scanner(System.in);
@@ -64,6 +71,7 @@ public class JavaAssignment {
 
                 if (identity.equalsIgnoreCase(storedIdentity) && username.equals(storedUsername) && password.equals(storedPassword)) {
                     System.out.println(identity + " logged in successfully.");
+                    loggedInUsername =  username; //Store the logged-in username
                     return true;
                 }
             }
@@ -124,5 +132,5 @@ public class JavaAssignment {
             e.printStackTrace();
         }
     }
-
+    
 }
