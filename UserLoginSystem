@@ -24,11 +24,13 @@ public class JavaAssignment {
             switch (choice) {
                 case 1:
                     loggedIn = loginUser("Sales Manager");
-                    Switch_for_SM.CallSwitchCase();
+                    Switch_Menu menu1 = new SM_menu();
+                    menu1.menu();
                     break;
                 case 2:
                     loggedIn = loginUser("Purchase Manager");
-                    //Switch Case
+                    Switch_Menu menu2 = new PM_menu();
+                    menu2.menu();
                     break;
                 case 3:
                     if (isAdminLoggedIn()) {
@@ -46,7 +48,7 @@ public class JavaAssignment {
 
         scanner.close();
     }
-    
+
     private static String loggedInUsername = null;
 
     // This method returns the username of the logged-in user
@@ -61,23 +63,20 @@ public class JavaAssignment {
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] userCredentials = line.split(",");
-                String storedIdentity = userCredentials[0].trim();
-                String storedUsername = userCredentials[1].trim();
-                String storedPassword = userCredentials[2].trim();
+        User user = null; //Declare a Yser reference
 
-                if (identity.equalsIgnoreCase(storedIdentity) && username.equals(storedUsername) && password.equals(storedPassword)) {
-                    System.out.println(identity + " logged in successfully.");
-                    loggedInUsername =  username; //Store the logged-in username
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading the user file.");
-            e.printStackTrace();
+        // Create the appropriate user instance based on the provided identity
+        if ("Sales Manager".equalsIgnoreCase(identity)) {
+            user = new SalesManager(username, password);
+        } else if ("Purchase Manager".equalsIgnoreCase(identity)) {
+            user = new PurchaseManager(username, password);
+        }
+        // Add similar cases for other user roles like Administrator
+
+        if (user != null && user.getUsername().equals(username) && user.getPassword().equals(password)) {
+            System.out.println(identity + " logged in successfully.");
+            loggedInUsername = username;
+            return true;
         }
 
         System.out.println("Login failed. Please try again.");
@@ -91,8 +90,24 @@ public class JavaAssignment {
         System.out.print("Enter administrator password: ");
         String password = scanner.nextLine();
 
-        // Assuming correct Administrator credentials are "Barry" and "6789"
-        return "Barry".equalsIgnoreCase(username) && "6789".equals(password);
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] userCredentials = line.split(",");
+                String storedIdentity = userCredentials[0].trim();
+                String storedUsername = userCredentials[1].trim();
+                String storedPassword = userCredentials[2].trim();
+
+                if ("Administrator".equalsIgnoreCase(storedIdentity) && username.equals(storedUsername) && password.equals(storedPassword)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the user file.");
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     private static void addNewUser() {
@@ -132,5 +147,52 @@ public class JavaAssignment {
             e.printStackTrace();
         }
     }
-    
+
+    // Define user subclasses as inner classes
+    private static class User {
+
+        private String identity;
+        private String username;
+        private String password;
+
+        public User(String identity, String username, String password) {
+            this.identity = identity;
+            this.username = username;
+            this.password = password;
+        }
+
+        public String getIdentity() {
+            return identity;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+
+    private static class Administrator extends User {
+
+        public Administrator(String username, String password) {
+            super("Administrator", username, password);
+        }
+    }
+
+    private static class SalesManager extends User {
+
+        public SalesManager(String username, String password) {
+            super("Sales Manager", username, password);
+        }
+    }
+
+    private static class PurchaseManager extends User {
+
+        public PurchaseManager(String username, String password) {
+            super("Purchase Manager", username, password);
+        }
+    }
+
 }
