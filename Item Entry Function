@@ -9,9 +9,9 @@ import java.util.List;
 
 public class Item {
 
-    protected String ItemCode;
-    protected String ItemName;
-    protected String SupplierID;
+    private String ItemCode;
+    private String ItemName;
+    private String SupplierID;
 
     public Item(String ItemCode, String ItemName, String SupplierID) {
         this.ItemCode = ItemCode;
@@ -23,12 +23,24 @@ public class Item {
         return ItemCode;
     }
 
+    public void setItemCode(String itemCode) {
+        this.ItemCode = itemCode;
+    }
+
     public String getItemName() {
         return ItemName;
     }
 
+    public void setItemName(String itemName) {
+        this.ItemName = itemName;
+    }
+
     public String getSupplierID() {
         return SupplierID;
+    }
+
+    public void setSupplierID(String supplierID) {
+        this.SupplierID = supplierID;
     }
 
     @Override
@@ -39,8 +51,8 @@ public class Item {
 
 class ItemDetails extends Item {
 
-    protected int StockQuantity;
-    protected float UnitPrice;
+    private int StockQuantity;
+    private float UnitPrice;
 
     public ItemDetails(String ItemCode, String ItemName, String SupplierID, int StockQuantity, float UnitPrice) {
         super(ItemCode, ItemName, SupplierID);
@@ -52,8 +64,16 @@ class ItemDetails extends Item {
         return StockQuantity;
     }
 
+    public void setStockQuantity(int stockQuantity) {
+        this.StockQuantity = stockQuantity;
+    }
+
     public float getUnitPrice() {
         return UnitPrice;
+    }
+
+    public void setUnitPrice(float unitPrice) {
+        this.UnitPrice = unitPrice;
     }
 
     @Override
@@ -67,7 +87,7 @@ class ItemDetails extends Item {
 
         List<ItemDetails> Itemlist = new ArrayList<>();
 
-        System.out.println("Enter Item Details!\n");
+        System.out.println("Item Entry!\n");
 
         int numericPart;
         String NewItemCode = null;
@@ -235,10 +255,10 @@ class ItemDetails extends Item {
         float newUnitPrice = SC1.nextFloat();
         SC1.nextLine();
 
-        itemToEdit.ItemName = newItemName;
-        itemToEdit.SupplierID = newSupplierID;
-        itemToEdit.StockQuantity = newStockQuantity;
-        itemToEdit.UnitPrice = newUnitPrice;
+        itemToEdit.setItemName(newItemName);
+        itemToEdit.setSupplierID(newSupplierID);
+        itemToEdit.setStockQuantity(newStockQuantity);
+        itemToEdit.setUnitPrice(newUnitPrice);
 
         try {
             try (FileWriter writer = new FileWriter("ItemDetails.txt")) {
@@ -255,3 +275,4 @@ class ItemDetails extends Item {
         }
     }
 }
+
