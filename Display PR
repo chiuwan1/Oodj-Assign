@@ -1,0 +1,34 @@
+    public static void displayPRList() {
+        try {
+            File prDetailsFile = new File("purchaseRequisitions.txt");
+            if (prDetailsFile.exists()) {
+                Scanner fileScanner = new Scanner(prDetailsFile);
+                System.out.println("------------------------------");
+                System.out.printf("%-15s | %s\n", "PR ID", "PR Date");
+                System.out.println("------------------------------");
+
+                List<String> PrId = new ArrayList<>(); // To store unique PR IDs
+
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] prDetails = line.split(";");
+                        String prId = prDetails[0];
+                        String prDate = prDetails[3];
+
+                        if (!PrId.contains(prId)) {
+                            PrId.add(prId);
+                            System.out.printf("%-15s | %s\n", prId, prDate);
+                        }
+                    }
+                }
+                System.out.println("------------------------------");
+                fileScanner.close();
+            } else {
+                System.out.println("Purchase requisitions file not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
