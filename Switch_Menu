@@ -12,9 +12,13 @@ abstract public class Switch_Menu {
         int SupplierEntryMenu_Input = SupplierEntryMenuInput.nextInt();
         switch (SupplierEntryMenu_Input) {
             case 1:
-                SupplierEntry.runSupplierEntry();
+                SupplierEntry.addSupplierDetail();
                 break;
             case 2:
+                SupplierEntry.editSupplier();
+                break;
+            case 3:
+                SupplierEntry.deleteSupplierDetail();
                 break;
             default:
                 break;
