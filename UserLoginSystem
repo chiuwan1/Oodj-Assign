@@ -111,41 +111,16 @@ public class JavaAssignment {
     }
 
     private static void addNewUser() {
-        try {
-            List<String> allUserData = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the new user's identity (Sales Manager/Purchase Manager/Administrator): ");
+        String identity = scanner.nextLine();
+        System.out.print("Enter the new user's username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter the new user's password: ");
+        String password = scanner.nextLine();
 
-            // Read all existing data from the original "users.txt" file
-            try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    allUserData.add(line);
-                }
-            }
-
-            // Get the new user's data
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter the new user's identity (Sales Manager/Purchase Manager/Administrator): ");
-            String identity = scanner.nextLine();
-            System.out.print("Enter the new user's username: ");
-            String username = scanner.nextLine();
-            System.out.print("Enter the new user's password: ");
-            String password = scanner.nextLine();
-
-            // Add the new user data to the in-memory list
-            allUserData.add(identity + ", " + username + ", " + password);
-
-            // Write all the data back to the original "users.txt" file
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-                for (String userData : allUserData) {
-                    bw.write(userData);
-                    bw.newLine();
-                }
-                System.out.println("New user added successfully.");
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred while adding the new user.");
-            e.printStackTrace();
-        }
+        // Add the new user data to the user storage
+        UserStorage.addUser(identity, username, password);
     }
 
     // Define user subclasses as inner classes
