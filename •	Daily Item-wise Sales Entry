@@ -1,15 +1,21 @@
 package UserLoginSystem;
 
+
 import java.io.File;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DailySales {
 
     public static void dailyItemWiseSalesEntry() {
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = dateFormat.format(currentDate);
         List<ItemDetails> itemList = new ArrayList<>();
         Scanner SC2 = new Scanner(System.in);
 
@@ -38,6 +44,7 @@ public class DailySales {
         }
 
         System.out.println("Daily Item-wise Sales Entry\n");
+        System.out.println("Date: "+ dateFormat.format(currentDate));
         System.out.println("Enter the item code: ");
         String itemCode = SC2.nextLine();
 
@@ -58,11 +65,11 @@ public class DailySales {
         System.out.println("Item remaining quantity: " + itemToUpdate.getStockQuantity());
         System.out.println("\nEnter the quantity sold: ");
         int quantitySold = SC2.nextInt();
-        SC2.nextLine(); // Consume the newline character
+        SC2.nextLine(); 
 
         int updatedStock = itemToUpdate.getStockQuantity() - quantitySold;
         if (updatedStock < 0) {
-            System.out.println("Not enough stock available.");
+            System.out.println("\nNot enough stock available");
             return;
         }
 
@@ -74,7 +81,12 @@ public class DailySales {
                     writer.write(item.toString());
                     writer.write(System.lineSeparator());
                 }
+                try (FileWriter soldItemWriter = new FileWriter("ItemSold.txt", true)) {
+                    soldItemWriter.write(formattedDate + ";" + itemToUpdate.getItemCode() + ";" + quantitySold);
+                    soldItemWriter.write(System.lineSeparator());
+                }
             }
+            System.out.println("\nRemaining quantity: " +updatedStock);
             System.out.println("\nDaily sales entry recorded successfully!");
 
         } catch (IOException e) {
