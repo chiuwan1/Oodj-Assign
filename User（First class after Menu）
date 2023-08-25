@@ -60,8 +60,6 @@ class OpenMenu extends User {
             case 1:
                 System.out.println("Logged in as Sales Manager.");
                 Switch_Menu menu1 = new SM_menu();
-                PurchaseRequisition.displayStockItems();
-                PurchaseRequisition.generatePR();
                 menu1.menu();// Call a method for Sales Manager tasks
                 break;
             case 2:
