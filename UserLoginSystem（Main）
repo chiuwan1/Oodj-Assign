@@ -1,0 +1,7 @@
+package UserLoginSystem;
+
+public class JavaAssignment {
+    public static void main(String[] args) {
+        User.loginUser();
+    }
+}
