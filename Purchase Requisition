@@ -96,12 +96,12 @@ public class PurchaseRequisition {
         }
 
         // Generate PR and save all records
-        initialPRNumber = generateAndSavePR(initialPRNumber, purchaseRequisitions);
+        initialPRNumber = generateAndSavePR(initialPRNumber, purchaseRequisitions, User.Username);
         // Display generated PR and its details
         displayGeneratedPR(initialPRNumber);
     }
 
-    private static String generateAndSavePR(String initialPRNumber, List<PurchaseRequisition> purchaseRequisitions) {
+    private static String generateAndSavePR(String initialPRNumber, List<PurchaseRequisition> purchaseRequisitions, String Username) {
         // Calculate unit prices, generate PR, and save records
         try (FileWriter F1 = new FileWriter("PurchaseRequisitions.txt", true)) {
             for (PurchaseRequisition pr : purchaseRequisitions) {
@@ -112,7 +112,7 @@ public class PurchaseRequisition {
                     int counter;
                     for (int i = 1; i <= 99999; i++) {
                         counter = i;
-                        initialPRNumber = String.format("P%04d", counter);
+                        initialPRNumber = String.format("PR%04d", counter);
                         boolean isPRCodeAvailable = isPRCodeAvailable(initialPRNumber);
                         if (isPRCodeAvailable) {
                             break;
@@ -121,7 +121,7 @@ public class PurchaseRequisition {
                 }
 
                 pr.PRnumber = initialPRNumber; // Assign the generated PR number
-                F1.write(pr.PRnumber + ";" + pr.Purchaseitemcode + ";" + pr.Purchasequantity + ";" + pr.RequiredDate + ";" + totalPrice + "\n");
+                F1.write(pr.PRnumber + ";" + pr.Purchaseitemcode + ";" + pr.Purchasequantity + ";" + pr.RequiredDate + ";" + totalPrice + ";" + Username +"\n");
             }
             System.out.println("\nPurchase Requisitions are successfully added and saved\n");
         } catch (IOException e) {
@@ -144,6 +144,7 @@ public class PurchaseRequisition {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 String currentDate = dateFormat.format(new Date());
                 System.out.println(" Issued Date: " + currentDate);
+                System.out.println(" Sales Manager: " + User.Username);
                 System.out.println("------------------------------------------------------------------------------------------------------");
                 System.out.printf("| %-10s | %-15s | %-12s | %-10s | %-10s | %-10s | %-12s |\n",
                         "Item Code", "Item Name", "Supplier ID", "Quantity", "Unit Price", "Total", "Date Required");
@@ -175,7 +176,6 @@ public class PurchaseRequisition {
             e.printStackTrace();
         }
     }
-
     private static boolean isPRCodeAvailable(String Purchaseitemcode) {
         try {
             File F2 = new File("PurchaseRequisitions.txt");
@@ -266,6 +266,46 @@ public class PurchaseRequisition {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return 0.0f;
+    }
+    
+
+    public static void displayPRList() {
+        try {
+            File prDetailsFile = new File("purchaseRequisitions.txt");
+            if (prDetailsFile.exists()) {
+                Scanner fileScanner = new Scanner(prDetailsFile);
+                System.out.println("------------------------------");
+                System.out.printf("%-15s | %s\n", "PR ID", "PR Date");
+                System.out.println("------------------------------");
+
+                List<String> PrId = new ArrayList<>(); // To store unique PR IDs
+
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] prDetails = line.split(";");
+                        String prId = prDetails[0];
+                        String prDate = prDetails[3];
+
+                        if (!PrId.contains(prId)) {
+                            PrId.add(prId);
+                            System.out.printf("%-15s | %s\n", prId, prDate);
+                        }
+                    }
+                }
+                System.out.println("------------------------------");
+                fileScanner.close();
+            } else {
+                System.out.println("Purchase requisitions file not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
         }
         return 0.0f;
     }
