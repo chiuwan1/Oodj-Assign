@@ -1,0 +1,100 @@
+package UserLoginSystem;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class User {
+
+    public static void loginUser() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Select your role:");
+        System.out.println("1. Sales Manager");
+        System.out.println("2. Purchase Manager");
+        System.out.println("3. Administrator");
+        System.out.print("Enter your choice (1/2/3): ");
+        int choice = scanner.nextInt();
+
+        scanner.nextLine(); // Consume the newline character
+
+        System.out.print("Enter your username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter your password: ");
+        String password = scanner.nextLine();
+
+        if (authenticateUser(username, password)) {
+            OpenMenu.openMenu(choice);// Pass the choice to OpenMenu class
+        } else {
+            System.out.println("Authentication failed. Incorrect username or password.");
+            loginUser(); // Re-prompt for login
+        }
+    }
+
+    private static boolean authenticateUser(String username, String password) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(", ");
+                if (parts.length == 3 && parts[1].equals(username) && parts[2].equals(password)) {
+                    return true; // Found a matching user
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false; // No matching user found
+    }
+
+}
+
+class OpenMenu extends User {
+
+    public static void openMenu(int choice) {
+        switch (choice) {
+            case 1:
+                System.out.println("Logged in as Sales Manager.");
+                Switch_Menu menu1 = new SM_menu();
+                menu1.menu();// Call a method for Sales Manager tasks
+                break;
+            case 2:
+                System.out.println("Logged in as Purchase Manager.");
+                Switch_Menu menu2 = new PM_menu();
+                menu2.menu();// Call a method for Purchase Manager tasks
+                break;
+            case 3:
+                System.out.println("Logged in as Administrator.");
+                AdminFunction menu3 = new AdminFunction();
+                menu3.addNewUser();// Call a method for Administrator tasks
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+        }
+    }
+}
+
+class AdminFunction extends User {
+
+    public static void addNewUser() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the new user's identity (Sales Manager/Purchase Manager/Administrator): ");
+        String identity = scanner.nextLine();
+        System.out.print("Enter the new user's username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter the new user's password: ");
+        String password = scanner.nextLine();
+
+        // Format the new user data
+        String newUserEntry = identity + ", " + username + ", " + password;
+
+        // Append the new user data to the "users.txt" file
+        try (FileWriter writer = new FileWriter("users.txt", true)) {
+            writer.write(newUserEntry + System.lineSeparator()); // Add a new line
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
