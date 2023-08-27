@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DailySales {
+public abstract class DailySales {
 
     public static void dailyItemWiseSalesEntry() {
         Date currentDate = new Date();
