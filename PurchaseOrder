@@ -1,0 +1,120 @@
+package UserLoginSystem;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class PurchaseOrder {
+
+    public static void processPurchaseRequisition() {
+        try {
+            File prDetailsFile = new File("PurchaseRequisitions.txt");
+            if (prDetailsFile.exists()) {
+                Scanner fileScanner = new Scanner(prDetailsFile);
+
+                displayAvailablePurchaseRequisitions(fileScanner);
+
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter PR ID to process: ");
+                String prIdToProcess = scanner.nextLine();
+
+                boolean found = false;
+                StringBuilder newPurchaseOrders = new StringBuilder();
+
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] prDetails = line.split(";");
+                        String prId = prDetails[0].trim();  // Trim to remove any leading/trailing spaces
+
+                        if (prId.equalsIgnoreCase(prIdToProcess)) {
+                            found = true;
+                            displayPrDetails(prDetails);
+                            String decision = getUserDecision(scanner);
+                            processUserDecision(decision, newPurchaseOrders, line);
+                        } else {
+                            newPurchaseOrders.append(line).append("\n");
+                        }
+                    }
+                }
+
+                handleProcessedPurchaseRequisitions(found, newPurchaseOrders);
+
+                fileScanner.close();
+            } else {
+                System.out.println("Purchase Requisitions file not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayAvailablePurchaseRequisitions(Scanner fileScanner) {
+        System.out.println("Available Purchase Requisitions:");
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.printf("%-15s | %-10s | %-8s | %-15s | %-10s | %-15s\n", 
+                          "PR Number", "Item Code", "Quantity", "Required Date", "Total Price", "User");
+        System.out.println("-------------------------------------------------------------------------------");
+
+        while (fileScanner.hasNextLine()) {
+            String line = fileScanner.nextLine();
+            if (!line.trim().isEmpty()) {
+                String[] prDetails = line.split(";");
+                String prNumber = prDetails[0];
+                String itemCode = prDetails[1];
+                String quantity = prDetails[2];
+                String requiredDate = prDetails[3];
+                String totalPrice = prDetails[4];
+                String user = prDetails[5];
+                System.out.printf("%-15s | %-10s | %-8s | %-15s | %-10s | %-15s\n", 
+                                  prNumber, itemCode, quantity, requiredDate, totalPrice, user);
+            }
+        }
+        System.out.println("-------------------------------------------------------------------------------");
+    }
+
+    private static void displayPrDetails(String[] prDetails) {
+        System.out.println("PR Details:");
+        System.out.println("------------------------------");
+        System.out.println("PR Number: " + prDetails[0]);
+        System.out.println("Item Code: " + prDetails[1]);
+        System.out.println("Quantity: " + prDetails[2]);
+        System.out.println("Required Date: " + prDetails[3]);
+        System.out.println("Total Price: " + prDetails[4]);
+        System.out.println("User: " + prDetails[5]);
+        System.out.println("------------------------------");
+    }
+
+    private static String getUserDecision(Scanner scanner) {
+        System.out.print("Approve (A) or Reject (R) this PR? ");
+        return scanner.nextLine();
+    }
+
+    private static void processUserDecision(String decision, StringBuilder newPurchaseOrders, String line) {
+        if (decision.equalsIgnoreCase("A")) {
+            newPurchaseOrders.append(line).append("\n");
+            System.out.println("PR Approved.");
+        } else if (decision.equalsIgnoreCase("R")) {
+            System.out.println("PR Rejected.");
+        } else {
+            System.out.println("Invalid choice. PR remains pending.");
+            newPurchaseOrders.append(line).append("\n");
+        }
+    }
+
+    private static void handleProcessedPurchaseRequisitions(boolean found, StringBuilder newPurchaseOrders) throws IOException {
+        if (!found) {
+            System.out.println("PR ID not found.");
+        } else {
+            FileWriter purchaseOrderWriter = new FileWriter("PurchaseOrder.txt", true);
+            purchaseOrderWriter.write(newPurchaseOrders.toString());
+            purchaseOrderWriter.close();
+
+            FileWriter updatedPrFile = new FileWriter("PurchaseRequisitions.txt");
+            updatedPrFile.write(newPurchaseOrders.toString());
+            updatedPrFile.close();
+        }
+    }
+
+}
