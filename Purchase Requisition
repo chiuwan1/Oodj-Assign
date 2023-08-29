@@ -78,9 +78,16 @@ public class PurchaseRequisition {
             System.out.print("Enter Item Code of the item to be purchased: ");
             String Purchaseitemcode = scanner.nextLine();
 
-            System.out.print("Enter purchase quantity: ");
-            int Purchasequantity = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int Purchasequantity = 0;
+            while (true) {
+                try {
+                    System.out.println("Enter Purchase Quantity: ");
+                    Purchasequantity = Integer.parseInt(scanner.nextLine());
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a valid integer value for Purchase Quantity!");
+                }
+            }
 
             System.out.print("Enter item required date (DD-MM-YYYY): ");
             String RequiredDate = scanner.nextLine();
@@ -121,7 +128,7 @@ public class PurchaseRequisition {
                 }
 
                 pr.PRnumber = initialPRNumber; // Assign the generated PR number
-                F1.write(pr.PRnumber + ";" + pr.Purchaseitemcode + ";" + pr.Purchasequantity + ";" + pr.RequiredDate + ";" + totalPrice + ";" + Username +"\n");
+                F1.write(pr.PRnumber + ";" + pr.Purchaseitemcode + ";" + pr.Purchasequantity + ";" + pr.RequiredDate + ";" + totalPrice + ";" + Username + "\n");
             }
             System.out.println("\nPurchase Requisitions are successfully added and saved\n");
         } catch (IOException e) {
@@ -144,7 +151,7 @@ public class PurchaseRequisition {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 String currentDate = dateFormat.format(new Date());
                 System.out.println(" Issued Date: " + currentDate);
-                System.out.println(" Sales Manager: " + User.Username);
+                System.out.println(" Issued By: " + User.Username);
                 System.out.println("------------------------------------------------------------------------------------------------------");
                 System.out.printf("| %-10s | %-15s | %-12s | %-10s | %-10s | %-10s | %-12s |\n",
                         "Item Code", "Item Name", "Supplier ID", "Quantity", "Unit Price", "Total", "Date Required");
@@ -176,6 +183,7 @@ public class PurchaseRequisition {
             e.printStackTrace();
         }
     }
+
     private static boolean isPRCodeAvailable(String Purchaseitemcode) {
         try {
             File F2 = new File("PurchaseRequisitions.txt");
@@ -269,16 +277,15 @@ public class PurchaseRequisition {
         }
         return 0.0f;
     }
-    
 
     public static void displayPRList() {
         try {
             File prDetailsFile = new File("purchaseRequisitions.txt");
             if (prDetailsFile.exists()) {
                 Scanner fileScanner = new Scanner(prDetailsFile);
-                System.out.println("------------------------------");
-                System.out.printf("%-15s | %s\n", "PR ID", "PR Date");
-                System.out.println("------------------------------");
+                System.out.println("-----------------------------------");
+                System.out.printf("%-15s | %s\n", "PR ID", "PR Required Date");
+                System.out.println("-----------------------------------");
 
                 List<String> PrId = new ArrayList<>(); // To store unique PR IDs
 
@@ -295,7 +302,7 @@ public class PurchaseRequisition {
                         }
                     }
                 }
-                System.out.println("------------------------------");
+                System.out.println("-----------------------------------");
                 fileScanner.close();
             } else {
                 System.out.println("Purchase requisitions file not found.");
@@ -306,7 +313,3 @@ public class PurchaseRequisition {
     }
 }
 
-        }
-        return 0.0f;
-    }
-}
