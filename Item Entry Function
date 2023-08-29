@@ -1,5 +1,6 @@
 package UserLoginSystem;
 
+
 import java.io.File;
 import java.util.Scanner;
 import java.io.FileWriter;
@@ -105,10 +106,26 @@ class ItemDetails extends Item {
         System.out.println("Enter Supplier ID: ");
         String SupplierID = SC1.nextLine();
         System.out.println("Enter Item Quantity: ");
-        int StockQuantity = SC1.nextInt();
+        int StockQuantity;
+        while (true) {
+            try {
+                StockQuantity = Integer.parseInt(SC1.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer value for Stock Quantity! ");
+            }
+        }
+
         System.out.println("Enter Unit Price : ");
-        float UnitPrice = SC1.nextFloat();
-        SC1.nextLine();
+        float UnitPrice;
+        while (true) {
+            try {
+                UnitPrice = Float.parseFloat(SC1.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid value for Unit Price! ");
+            }
+        }
 
         ItemDetails Item = new ItemDetails(NewItemCode, ItemName, SupplierID, StockQuantity, UnitPrice);
         Itemlist.add(Item);
@@ -249,11 +266,27 @@ class ItemDetails extends Item {
         String newItemName = SC1.nextLine();
         System.out.println("Enter new Supplier ID: ");
         String newSupplierID = SC1.nextLine();
-        System.out.println("Enter new Item Quantity: ");
-        int newStockQuantity = SC1.nextInt();
-        System.out.println("Enter new Unit Price: ");
-        float newUnitPrice = SC1.nextFloat();
-        SC1.nextLine();
+        int newStockQuantity = 0;
+        while (true) {
+            try {
+                System.out.println("Enter new Item Quantity: ");
+                newStockQuantity = Integer.parseInt(SC1.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer value for Item Quantity!");
+            }
+        }
+
+        float newUnitPrice = 0.0f;
+        while (true) {
+            try {
+                System.out.println("Enter new Unit Price: ");
+                newUnitPrice = Float.parseFloat(SC1.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid float value for Unit Price!");
+            }
+        }
 
         itemToEdit.setItemName(newItemName);
         itemToEdit.setSupplierID(newSupplierID);
@@ -275,4 +308,5 @@ class ItemDetails extends Item {
         }
     }
 }
+
 
