@@ -1,6 +1,12 @@
 package UserLoginSystem;
 
 
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package oodj.assign;
+
 import java.io.File;
 import java.util.Scanner;
 import java.io.FileWriter;
@@ -63,10 +69,16 @@ public class DailySales {
 
         System.out.println("\nItem name: " + itemToUpdate.getItemName());
         System.out.println("Item remaining quantity: " + itemToUpdate.getStockQuantity());
-        System.out.println("\nEnter the quantity sold: ");
-        int quantitySold = SC2.nextInt();
-        SC2.nextLine(); 
-
+        int quantitySold = 0;                       
+        while (true) {
+            try {
+                System.out.println("\nEnter the quantity sold: ");
+                quantitySold = Integer.parseInt(SC2.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer value for Item Quantity Sold!");
+            }
+        }
         int updatedStock = itemToUpdate.getStockQuantity() - quantitySold;
         if (updatedStock < 0) {
             System.out.println("\nNot enough stock available");
@@ -95,3 +107,4 @@ public class DailySales {
         }
     }
 }
+
