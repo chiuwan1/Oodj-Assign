@@ -1,136 +1,94 @@
-
-import java.io.IOException;
 import java.util.Scanner;
+
 
 abstract public class Switch_Menu {
 
     public abstract void menu();
-
-    public void SupplierEntryMenu() {
-        System.out.println("SupplierEntry \n\n1. Add Record\n2. Edit Record \n3. Delete Record\n4. Return to previous menu");
-        Scanner SupplierEntryMenuInput = new Scanner(System.in);
-        int SupplierEntryMenu_Input = SupplierEntryMenuInput.nextInt();
-        switch (SupplierEntryMenu_Input) {
-            case 1:
-                SupplierEntry.addSupplierDetail();
-                break;
-            case 2:
-                SupplierEntry.editSupplier();
-                break;
-            case 3:
-                SupplierEntry.deleteSupplierDetail();
-                break;
-            default:
-                break;
-        }
+    
+    public static void SupplierEntryMenu(SM_menu smMenu){
+    System.out.println("SupplierEntry \n\n1. Add Record\n2. Edit Record \n3. Delete Record\n4. Return to previous menu");
+    Scanner SupplierEntryMenuInput = new Scanner(System.in);
+    int SupplierEntryMenu_Input = SupplierEntryMenuInput.nextInt();
+    switch(SupplierEntryMenu_Input){
+        case 1: SupplierDetails.addSupplierDetail();smMenu.menu();break;
+        case 2: SupplierDetails.editSupplierDetail();smMenu.menu();break;
+        case 3: SupplierDetails.deleteSupplierDetail();smMenu.menu();break;
+        case 4 :smMenu.menu();break;
+        default:break;
+    }
+    }
+    
+    public static void ItemEntryMenu(SM_menu pmMenu){
+    System.out.println("ItemEntry \n\n1. Add Record\n2. Edit Record \n3. Delete Record\n4. Return to previous menu");
+    Scanner ItemEntryMenuInput = new Scanner(System.in);
+    int ItemEntryMenu_Input = ItemEntryMenuInput.nextInt();
+    switch(ItemEntryMenu_Input){
+        case 1: ItemDetails.AddItem();pmMenu.menu();break;//Additem();
+        case 2: ItemDetails.EditItem();pmMenu.menu();break; //Edititem();
+        case 3: ItemDetails.DeleteItem();pmMenu.menu();break; //Deleteitem();
+        case 4: pmMenu.menu();break;
+        default:break;
+    }
     }
 
-    public void ItemEntryMenu() {
-        System.out.println("ItemEntry \n\n1. Add Record\n2. Edit Record \n3. Delete Record\n4. Return to previous menu");
-        Scanner ItemEntryMenuInput = new Scanner(System.in);
-        int ItemEntryMenu_Input = ItemEntryMenuInput.nextInt();
-        switch (ItemEntryMenu_Input) {
-            case 1:
-                break;
-            case 2:
-                break;
-            default:
-                break;
+    
+}//dont delete this, this is the end of this class
+
+
+
+class SM_menu extends Switch_Menu{
+    @Override
+    public void menu(){
+        System.out.println("Sale Manager\nMenu \n\n1. Item Entry \n2. Supplier Entry \n3. Daily Item-wise Sales Entry \n4. Create Purchase Requisition \n5. View Purchase Requisition \n6. View List of Purchase Order");
+        System.out.println("Enter number to continue: \n");
+        Scanner menuInput = new Scanner(System.in);
+        int MenuInput = menuInput.nextInt();
+        switch(MenuInput){
+            case 1:ItemEntryMenu(this);break;
+            case 2:SupplierEntryMenu(this); break;
+            case 3:break;
+            case 4:break;
+            case 5:break;
+            case 6:break;
+            default:break;
         }
     }
 }
 
-class SM_menu extends Switch_Menu {
+class PM_menu extends Switch_Menu{
     @Override
-    public void menu() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("Sale Manager\nMenu \n\n1. Item Entry \n2. Supplier Entry \n0. Back to main menu");
-            System.out.println("Enter number to continue: ");
-            int MenuInput = scanner.nextInt();
-            switch (MenuInput) {
-                case 1:
-                    ItemEntryMenu();
-                    break;
-                case 2:
-                    SupplierEntryMenu();
-                    break;
-                case 0:
-                    return;
-                default:
-                    break;
-            }
-            clearConsole();
-        }
-    }
-    
-    private void clearConsole() {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void menu(){
+        System.out.println("Purcahse Manager \nMenu \n\n1. Item List \n2. Supplier List \n3. Display Purchase Requisition \n4. Generate Purcahse Order \n5. View List of Purchase Order ");
+        System.out.println("Enter number to continue: \n");
+        Scanner menuInput = new Scanner(System.in);
+        int MenuInput = menuInput.nextInt();
+        switch(MenuInput)
+                {
+            case 1:break;
+            case 2:break;
+            case 3:break;
+            case 4:break;
+            case 5:break;
+            default:break;
+                }
     }
 }
 
-class PM_menu extends Switch_Menu {
+class Admin_menu extends Switch_Menu{
     @Override
-    public void menu() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("Purchase Manager \nMenu \n\n1. Item List \n2. Supplier List \n0. Back to main menu");
-            System.out.println("Enter number to continue: ");
-            int MenuInput = scanner.nextInt();
-            switch (MenuInput) {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 0:
-                    return;
-                default:
-                    break;
-            }
-            clearConsole();
-        }
-    }
-    
-    private void clearConsole() {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-
-class Admin_menu extends Switch_Menu {
-    @Override
-    public void menu() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("Admin\nMenu \n\n1. Register New User\n2. User List \n0. Back to main menu");
-            System.out.println("Enter number to continue: ");
-            int MenuInput = scanner.nextInt();
-            switch (MenuInput) {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 0:
-                    return;
-                default:
-                    break;
-            }
-            clearConsole();
-        }
-    }
-    
-    private void clearConsole() {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+    public void menu(){
+        System.out.println("Admin\nMenu \n\n1. Register New User\n2. User List \n3. View Item List \n4. View Supplier List \n5. View PR\n6. View PO");
+        System.out.println("Enter number to continue: \n");
+        Scanner menuInput = new Scanner(System.in);
+        int MenuInput = menuInput.nextInt();
+        switch(MenuInput){
+            case 1:break;
+            case 2:break;
+            case 3:break;
+            case 4:break;
+            case 5:break;
+            case 6:break;
+            default:break;
         }
     }
 }
