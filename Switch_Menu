@@ -79,6 +79,7 @@ class SM_menu extends Switch_Menu {
                     DailySales.DeleteDailySalesEntry();
                     break;
                 case 5:
+                    PurchaseRequisition.displayStockItems();
                     PurchaseRequisition.generatePR();
                     break;
                 case 6:
@@ -88,6 +89,7 @@ class SM_menu extends Switch_Menu {
                     break;
                 case 8:
                     System.out.println("Exiting the program.");
+                    menuInput.close();
                     return;
                 default:
                     System.out.println("Please enter a valid option!");
@@ -121,6 +123,7 @@ class PM_menu extends Switch_Menu {
                     break;
                 case 6:
                     System.out.println("Exiting the program.");
+                    menuInput.close();
                     return;
                 default:
                     System.out.println("Please enter a valid option!");
@@ -161,6 +164,7 @@ class Admin_menu extends Switch_Menu {
                     DailySales.DeleteDailySalesEntry();
                     break;
                 case 8:
+                    PurchaseRequisition.displayStockItems();
                     PurchaseRequisition.generatePR();
                     break;
                 case 9:
@@ -177,6 +181,7 @@ class Admin_menu extends Switch_Menu {
                     break;
                 case 14:
                     System.out.println("Exiting the program.");
+                    menuInput.close();
                     return;
                 default:
                     System.out.println("Please enter a valid option!");
