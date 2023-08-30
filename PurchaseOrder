@@ -212,7 +212,7 @@ public class PurchaseOrder {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] supplierDetails = line.split(";");
-                if (supplierDetails.length >= 6 && supplierDetails[5].equals(itemCode)) {
+                if (supplierDetails.length >= 5 && supplierDetails[4].equals(itemCode)) {
                     return supplierDetails[1]; // Return the supplier name
                 }
             }
