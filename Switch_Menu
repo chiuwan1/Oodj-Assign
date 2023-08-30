@@ -62,7 +62,7 @@ class SM_menu extends Switch_Menu {
     public void menu() {
         Scanner menuInput = new Scanner(System.in);
         while (true) {
-            System.out.println("\nSale Manager\nMenu \n\n1. Item Entry \n2. Supplier Entry \n3. Daily Item-wise Sales Entry \n4. Delete Item-wise Sales Entry \n5. Create Purchase Requisition \n6. View Purchase Requisition  \n7. View List of Purchase Order \n8. Exit");
+            System.out.println("\nSales Manager\nMenu \n\n1. Item Entry \n2. Supplier Entry \n3. Daily Item-wise Sales Entry \n4. Delete Item-wise Sales Entry \n5. Create Purchase Requisition \n6. View Purchase Requisition  \n7. View List of Purchase Order \n8. Exit");
             System.out.println("Enter number to continue: \n");
             int MenuInput = menuInput.nextInt();
             switch (MenuInput) {
