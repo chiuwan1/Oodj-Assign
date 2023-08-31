@@ -113,7 +113,7 @@ class PM_menu extends Switch_Menu {
                     PurchaseRequisition.displayStockItems();
                     break;
                 case 2:
-                    break;
+                    DisplaySupplierList.displaySupplierList();break;
                 case 3:
                     PurchaseRequisition.displayPRList();
                     break;
