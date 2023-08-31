@@ -106,6 +106,7 @@ class SM_menu extends Switch_Menu {
                     PurchaseRequisition.displayPRList();
                     break;
                 case 7:
+                    PurchaseOrder.processListOFPurchaseOrder();
                     break;
                 case 8:
                     System.out.println("Exiting the program.");
@@ -125,7 +126,7 @@ class PM_menu extends Switch_Menu {
     public void menu() {
         Scanner menuInput = new Scanner(System.in);
         while (true) {
-            System.out.println("Purcahse Manager \nMenu \n\n1. Item List \n2. Supplier List \n3. Display Purchase Requisition \n4. Generate Purcahse Order \n5. View List of Purchase Order \n6. Exit ");
+            System.out.println("Purcahse Manager \nMenu \n\n1. Item List \n2. Supplier List \n3. Display Purchase Requisition \n4. Add Purcahse Order \n5. Delete Purchase Order \n6. List of Purchase Order \n7. Exit ");
             System.out.println("Enter number to continue: \n");
             int MenuInput = menuInput.nextInt();
             switch (MenuInput) {
@@ -138,10 +139,15 @@ class PM_menu extends Switch_Menu {
                     PurchaseRequisition.displayPRList();
                     break;
                 case 4:
+                    PurchaseOrder.processAddPurchaseOrder();
                     break;
                 case 5:
+                    PurchaseOrder.processDeletePurchaseOrder();
                     break;
                 case 6:
+                    PurchaseOrder.processListOFPurchaseOrder();
+                    break;
+                case 7:
                     System.out.println("Exiting the program.");
                     menuInput.close();
                     return;
@@ -159,7 +165,7 @@ class Admin_menu extends Switch_Menu {
     public void menu() {
         Scanner menuInput = new Scanner(System.in);
         while (true) {
-            System.out.println("Admin\nMenu \n\n1. Register New User\n2. Add Item \n3. Delete Item \n4. Edit Item \n5. Supplier Entry \n6. Daily Item-wise Sales Entry  \n7. Delete Daily Item-wise Sales Entry  \n8. Create Purchase Requisitionn \n9. Display Requisition \n10. View List of Purchase Order \n11. View List of Items \n12. View List of Suppliers \n13. Generate Purchase Order \n14. Exit");
+            System.out.println("Admin\nMenu \n\n1. Register New User\n2. Add Item \n3. Delete Item \n4. Edit Item \n5. Supplier Entry \n6. Daily Item-wise Sales Entry  \n7. Delete Daily Item-wise Sales Entry  \n8. Create Purchase Requisitionn \n9. Display Requisition \n10. Add Purchase Order \n11. Delete Purchase Order \n12. View List of Purchase Order \n13. View List of Items \n14. View List of Suppliers \n15. Exit");
             System.out.println("Enter number to continue: \n");
             int MenuInput = menuInput.nextInt();
             switch (MenuInput) {
@@ -191,15 +197,20 @@ class Admin_menu extends Switch_Menu {
                     PurchaseRequisition.displayPRList();
                     break;
                 case 10:
+                    PurchaseOrder.processAddPurchaseOrder();
                     break;
                 case 11:
-                    PurchaseRequisition.displayStockItems();
+                    PurchaseOrder.processDeletePurchaseOrder();
                     break;
                 case 12:
+                    PurchaseOrder.processDeletePurchaseOrder();
                     break;
                 case 13:
+                    PurchaseRequisition.displayStockItems();
                     break;
                 case 14:
+                    break;
+                case 15:
                     System.out.println("Exiting the program.");
                     menuInput.close();
                     return;
