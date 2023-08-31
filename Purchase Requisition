@@ -1,5 +1,4 @@
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -277,6 +276,57 @@ public class PurchaseRequisition {
         }
         return 0.0f;
     }
+    public static void deletePR() {
+    List<String> prList = new ArrayList<>();
+    Scanner prIdScanner = new Scanner(System.in);
+    System.out.println("Enter the PR ID to delete: ");
+    String prIdToDelete = prIdScanner.nextLine();
+
+    try {
+        File prDetailsFile = new File("PurchaseRequisitions.txt");
+        if (prDetailsFile.exists()) {
+            Scanner fileScanner = new Scanner(prDetailsFile);
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                if (!line.trim().isEmpty()) {
+                    String[] prDetails = line.split(";");
+                    prList.add(line);
+                }
+            }
+            fileScanner.close();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        return;
+    }
+
+List<String> prLinesToDelete = new ArrayList<>();
+    for (String prLine : prList) {
+        String[] prDetails = prLine.split(";");
+        if (prDetails[0].equals(prIdToDelete)) {
+            prLinesToDelete.add(prLine);
+        }
+    }
+
+    if (!prLinesToDelete.isEmpty()) {
+        prList.removeAll(prLinesToDelete);
+        try {
+            try (FileWriter writer = new FileWriter("PurchaseRequisitions.txt")) {
+                for (String prLine : prList) {
+                    writer.write(prLine);
+                    writer.write(System.lineSeparator());
+                }
+            }
+            System.out.println("\nPR records deleted successfully!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error occurred while deleting the PR records.");
+        }
+    } else {
+        System.out.println("PR ID not found.");
+    }
+}
 
     public static void displayPRList() {
         try {
@@ -312,4 +362,3 @@ public class PurchaseRequisition {
         }
     }
 }
-
