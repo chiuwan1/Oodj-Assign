@@ -79,7 +79,7 @@ class OpenMenu extends User {
     }
 }
 
-class AdminFunction extends User {
+class Admin extends User {
 
     public static void addNewUser() {
         Scanner scanner = new Scanner(System.in);
