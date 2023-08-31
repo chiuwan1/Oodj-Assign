@@ -15,7 +15,7 @@ public class PurchaseOrder {
             System.out.println("Select an option:");
             System.out.println("1. Add Purchase Order");
             System.out.println("2. Delete Purchase Order");
-            System.out.println("3. Display Purchase Order");
+            System.out.println("3. List Purchase Order");
             System.out.println("0. Exit");
 
             int choice = scanner.nextInt();
@@ -29,7 +29,7 @@ public class PurchaseOrder {
                     processDeletePurchaseOrder(); // Delete Purchase Order
                     break;
                 case 3:
-                    processDisplayPurchaseOrder(); // Display Purchase Order
+                    processListOFPurchaseOrder(); // List of Purchase Order
                     break;
                 case 0:
                     System.out.println("Exiting...");
@@ -41,7 +41,7 @@ public class PurchaseOrder {
         }
     }
 
-    private static void processAddPurchaseOrder() {
+    public static void processAddPurchaseOrder() {
         try {
             File prDetailsFile = new File("PurchaseRequisitions.txt");
             if (prDetailsFile.exists()) {
@@ -79,7 +79,7 @@ public class PurchaseOrder {
                         String decision = getUserDecision(scanner);
                         if (decision.equalsIgnoreCase("A")) {
                             System.out.println("PR Approved.");
-                            movePRToPO(prDetails, poCounter); // Write to PurchaseOrder.txt with POID
+                            movePRToPO(prDetails, poCounter, User.Username); // Pass the purchase manager's name
                             poCounter++; // Increment the PO counter
                         } else {
                             processUserDecision(decision, newPurchaseOrders, prDetails);
@@ -130,11 +130,24 @@ public class PurchaseOrder {
         purchaseOrderFile.close();
     }
 
-    private static void movePRToPO(String prDetails, int poCounter) throws IOException {
+    private static void movePRToPO(String prDetails, int poCounter, String purchaseManager) throws IOException {
         String poid = String.format("PO%04d", poCounter);
+        String[] prDetailsArr = prDetails.split(";");
+        String itemCode = prDetailsArr[1];
+        String supplierName = getSupplierNameForPR(itemCode);
+
         FileWriter purchaseOrderFile = new FileWriter("PurchaseOrder.txt", true);
-        purchaseOrderFile.write(poid + ";" + prDetails + "\n");
+        purchaseOrderFile.write(poid + ";" + prDetails + ";" + purchaseManager + ";" + supplierName + "\n");
         purchaseOrderFile.close();
+
+        // Display the details of the newly generated PO
+        System.out.println("New Purchase Order Generated:");
+        System.out.println("--------------------------------------------");
+        System.out.println("\n\nPO ID: " + poid);
+        System.out.println("Purchase Manager: " + purchaseManager);
+        System.out.println("Supplier Name: " + supplierName);
+        displayPrDetails(prDetailsArr); // Display PR details
+        System.out.println("--------------------------------------------");
     }
 
     private static void displayPrDetails(String[] prDetails) {
@@ -191,7 +204,26 @@ public class PurchaseOrder {
         return 1; // If the file doesn't exist, start from PO0001
     }
 
-    private static void processDeletePurchaseOrder() {
+    private static String getSupplierNameForPR(String itemCode) throws IOException {
+        File supplierListFile = new File("SupplierList.txt");
+        if (supplierListFile.exists()) {
+            Scanner fileScanner = new Scanner(supplierListFile);
+
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                String[] supplierDetails = line.split(";");
+                if (supplierDetails.length >= 5 && supplierDetails[4].equals(itemCode)) {
+                    return supplierDetails[1]; // Return the supplier name
+                }
+            }
+
+            fileScanner.close();
+        }
+
+        return "Unknown Supplier"; // Default if supplier not found or file doesn't exist
+    }
+
+    public static void processDeletePurchaseOrder() {
         try {
             File poFile = new File("PurchaseOrder.txt");
             if (poFile.exists()) {
@@ -244,21 +276,21 @@ public class PurchaseOrder {
 
     private static void displayPurchaseOrders(List<String> poDetailsList) {
         System.out.println("Purchase Orders:");
-        System.out.println("---------------------------------------------------------------------------------------------------------");
-        System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s\n",
-                "PO ID", "PR Number", "Item Code", "Quantity", "Required Date", "Total Price", "Sales Manager");
-        System.out.println("---------------------------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s | %-16s | %-15s\n",
+                "PO ID", "PR Number", "Item Code", "Quantity", "Required Date", "Total Price", "Sales Manager", "Purchase Manager", "Supplier Name");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
 
         for (String poDetails : poDetailsList) {
             String[] poDetailsArr = poDetails.split(";", 2); // Split only into 2 parts (PO ID and rest)
             String poId = poDetailsArr[0];
             String prDetails = poDetailsArr[1];
             String[] prDetailsArr = prDetails.split(";");
-            System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s\n",
-                    poId, prDetailsArr[0], prDetailsArr[1], prDetailsArr[2], prDetailsArr[3], prDetailsArr[4], prDetailsArr[5]);
+            System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s | %-16s | %-15s\n",
+                    poId, prDetailsArr[0], prDetailsArr[1], prDetailsArr[2], prDetailsArr[3], prDetailsArr[4], prDetailsArr[5], prDetailsArr[6], prDetailsArr[7]);
         }
 
-        System.out.println("---------------------------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
     private static void handleUpdatedPurchaseOrders(String updatedPurchaseOrders) throws IOException {
@@ -267,17 +299,17 @@ public class PurchaseOrder {
         updatedPoFile.close();
     }
 
-    private static void processDisplayPurchaseOrder() {
+    public static void processListOFPurchaseOrder() {
         try {
             File poFile = new File("PurchaseOrder.txt");
             if (poFile.exists()) {
                 Scanner fileScanner = new Scanner(poFile);
 
                 System.out.println("Purchase Orders:");
-                System.out.println("---------------------------------------------------------------------------------------------------------");
-                System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s\n",
-                        "PO ID", "PR Number", "Item Code", "Quantity", "Required Date", "Total Price", "Sales Manager");
-                System.out.println("---------------------------------------------------------------------------------------------------------");
+                System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
+                System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s | %-16s | %-15s\n",
+                        "PO ID", "PR Number", "Item Code", "Quantity", "Required Date", "Total Price", "Sales Manager", "Purchase Manager", "Supplier Name");
+                System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
 
                 while (fileScanner.hasNextLine()) {
                     String line = fileScanner.nextLine();
@@ -286,12 +318,12 @@ public class PurchaseOrder {
                         String poId = poDetailsArr[0];
                         String poDetails = poDetailsArr[1];
                         String[] prDetails = poDetails.split(";");
-                        System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s\n",
-                                poId, prDetails[0], prDetails[1], prDetails[2], prDetails[3], prDetails[4], prDetails[5]);
+                        System.out.printf("%-15s | %-15s | %-10s | %-8s | %-15s | %-11s | %-15s | %-16s | %-15s\n",
+                                poId, prDetails[0], prDetails[1], prDetails[2], prDetails[3], prDetails[4], prDetails[5], prDetails[6], prDetails[7]);
                     }
                 }
 
-                System.out.println("---------------------------------------------------------------------------------------------------------");
+                System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
                 fileScanner.close();
             } else {
                 System.out.println("Purchase Order file not found.");
