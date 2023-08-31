@@ -1,4 +1,3 @@
-package UserLoginSystem;
 
 
 import java.io.File;
@@ -308,5 +307,3 @@ class ItemDetails extends Item {
         }
     }
 }
-
-
