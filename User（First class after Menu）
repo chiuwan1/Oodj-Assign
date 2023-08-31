@@ -1,4 +1,4 @@
-package UserLoginSystem;
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -58,19 +58,19 @@ class OpenMenu extends User {
     public static void openMenu(int choice) {
         switch (choice) {
             case 1:
-                System.out.println("Logged in as Sales Manager.");
+                System.out.println("\nLogged in as Sales Manager.");
                 Switch_Menu menu1 = new SM_menu();
                 menu1.menu();// Call a method for Sales Manager tasks
                 break;
             case 2:
-                System.out.println("Logged in as Purchase Manager.");
+                System.out.println("\nLogged in as Purchase Manager.");
                 Switch_Menu menu2 = new PM_menu();
                 menu2.menu();// Call a method for Purchase Manager tasks
                 break;
             case 3:
-                System.out.println("Logged in as Administrator.");
-                AdminFunction menu3 = new AdminFunction();
-                menu3.addNewUser();// Call a method for Administrator tasks
+                System.out.println("\nLogged in as Administrator.");
+                Switch_Menu menu3 = new Admin_menu();
+                menu3.menu();// Call a method for Administrator tasks
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
