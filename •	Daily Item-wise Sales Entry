@@ -45,7 +45,6 @@ public class DailySales {
             e.printStackTrace();
             return;
         }
-
         System.out.println("Daily Item-wise Sales Entry\n");
         System.out.println("Date: " + dateFormat.format(currentDate));
         System.out.println("Enter the item code: ");
@@ -178,6 +177,7 @@ public class DailySales {
             System.out.println("Error occurred while updating the record.");
         }
     }
+
     private static int QuantitySold(String itemCode, String date) {
         int totalQuantity = 0;
         try {
@@ -199,147 +199,149 @@ public class DailySales {
         }
         return totalQuantity;
     }
+
     private static void RemoveSalesEntry(String itemCode, String date) {
-    try {
-        File soldItemFile = new File("ItemSold.txt");
-        if (soldItemFile.exists()) {
-            List<String> updatedLines = new ArrayList<>();
-            Scanner fileScanner = new Scanner(soldItemFile);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] salesDetails = line.split(";");
-                String salesDate = salesDetails[0].trim();
-                if (!(salesDetails[1].equals(itemCode) && salesDate.equals(date))) {
+        try {
+            File soldItemFile = new File("ItemSold.txt");
+            if (soldItemFile.exists()) {
+                List<String> updatedLines = new ArrayList<>();
+                Scanner fileScanner = new Scanner(soldItemFile);
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    String[] salesDetails = line.split(";");
+                    String salesDate = salesDetails[0].trim();
+                    if (!(salesDetails[1].equals(itemCode) && salesDate.equals(date))) {
+                        updatedLines.add(line);
+                    }
+                }
+                fileScanner.close();
+
+                try (FileWriter writer = new FileWriter("ItemSold.txt")) {
+                    for (String updatedLine : updatedLines) {
+                        writer.write(updatedLine);
+                        writer.write(System.lineSeparator());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Error occurred while updating sales records.");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void EditDailySalesEntry() {
+        Scanner SC = new Scanner(System.in);
+
+        System.out.println("Enter the date (yyyy-MM-dd): ");
+        String enteredDate = SC.nextLine();
+
+        System.out.println("Enter the item code: ");
+        String itemCode = SC.nextLine();
+
+        int updatedQuantity = 0;
+        while (true) {
+            try {
+                System.out.println("Enter the updated quantity sold: ");
+                updatedQuantity = Integer.parseInt(SC.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer value for the updated quantity!");
+            }
+        }
+
+        boolean recordFound = false;
+        List<String> updatedLines = new ArrayList<>();
+
+        try {
+            File soldItemFile = new File("ItemSold.txt");
+            if (soldItemFile.exists()) {
+                Scanner fileScanner = new Scanner(soldItemFile);
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    String[] salesDetails = line.split(";");
+                    String salesDate = salesDetails[0].trim();
+                    String salesItemCode = salesDetails[1].trim();
+                    if (salesDate.equals(enteredDate) && salesItemCode.equals(itemCode)) {
+                        int originalQuantity = Integer.parseInt(salesDetails[2]);
+                        int quantityDifference = updatedQuantity - originalQuantity;
+                        UpdateItemDetails(itemCode, quantityDifference);
+                        salesDetails[2] = Integer.toString(updatedQuantity);
+                        line = String.join(";", salesDetails);
+                        recordFound = true;
+                    }
                     updatedLines.add(line);
                 }
-            }
-            fileScanner.close();
+                fileScanner.close();
 
-            try (FileWriter writer = new FileWriter("ItemSold.txt")) {
-                for (String updatedLine : updatedLines) {
-                    writer.write(updatedLine);
-                    writer.write(System.lineSeparator());
+                if (!recordFound) {
+                    System.out.println("No matching sales record found for the specified date and item.");
+                    return;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Error occurred while updating sales records.");
+
+                try (FileWriter writer = new FileWriter("ItemSold.txt")) {
+                    for (String updatedLine : updatedLines) {
+                        writer.write(updatedLine);
+                        writer.write(System.lineSeparator());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Error occurred while updating sales records.");
+                }
+
+                System.out.println("Daily sales entry edited and item quantity updated!");
+
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-}
-        public static void EditDailySalesEntry() {
-    Scanner SC = new Scanner(System.in);
 
-    System.out.println("Enter the date (yyyy-MM-dd): ");
-    String enteredDate = SC.nextLine();
+    private static void UpdateItemDetails(String itemCode, int quantityDifference) {
+        List<ItemDetails> itemList = new ArrayList<>();
 
-    System.out.println("Enter the item code: ");
-    String itemCode = SC.nextLine();
-
-    int updatedQuantity = 0;
-    while (true) {
         try {
-            System.out.println("Enter the updated quantity sold: ");
-            updatedQuantity = Integer.parseInt(SC.nextLine());
-            break;
-        } catch (NumberFormatException e) {
-            System.out.println("Please enter a valid integer value for the updated quantity!");
-        }
-    }
-
-    boolean recordFound = false;
-    List<String> updatedLines = new ArrayList<>();
-    
-    try {
-        File soldItemFile = new File("ItemSold.txt");
-        if (soldItemFile.exists()) {
-            Scanner fileScanner = new Scanner(soldItemFile);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] salesDetails = line.split(";");
-                String salesDate = salesDetails[0].trim();
-                String salesItemCode = salesDetails[1].trim();
-                if (salesDate.equals(enteredDate) && salesItemCode.equals(itemCode)) {
-                    int originalQuantity = Integer.parseInt(salesDetails[2]);
-                    int quantityDifference = updatedQuantity - originalQuantity;
-                    UpdateItemDetails(itemCode, quantityDifference);
-                    salesDetails[2] = Integer.toString(updatedQuantity);
-                    line = String.join(";", salesDetails);
-                    recordFound = true;
+            File itemDetailsFile = new File("ItemDetails.txt");
+            if (itemDetailsFile.exists()) {
+                Scanner fileScanner = new Scanner(itemDetailsFile);
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] itemDetails = line.split(";");
+                        itemList.add(new ItemDetails(
+                                itemDetails[0],
+                                itemDetails[1],
+                                itemDetails[2],
+                                Integer.parseInt(itemDetails[3]),
+                                Float.parseFloat(itemDetails[4])
+                        ));
+                    }
                 }
-                updatedLines.add(line);
+                fileScanner.close();
             }
-            fileScanner.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            if (!recordFound) {
-                System.out.println("No matching sales record found for the specified date and item.");
-                return;
+        for (ItemDetails item : itemList) {
+            if (item.getItemCode().equals(itemCode)) {
+                int updatedStock = item.getStockQuantity() - quantityDifference;
+                item.setStockQuantity(updatedStock);
+                break;
             }
+        }
 
-            try (FileWriter writer = new FileWriter("ItemSold.txt")) {
-                for (String updatedLine : updatedLines) {
-                    writer.write(updatedLine);
+        try {
+            try (FileWriter writer = new FileWriter("ItemDetails.txt")) {
+                for (ItemDetails item : itemList) {
+                    writer.write(item.toString());
                     writer.write(System.lineSeparator());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Error occurred while updating sales records.");
             }
-
-            System.out.println("Daily sales entry edited and item quantity updated!");
-
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-private static void UpdateItemDetails(String itemCode, int quantityDifference) {
-    List<ItemDetails> itemList = new ArrayList<>();
-
-    try {
-        File itemDetailsFile = new File("ItemDetails.txt");
-        if (itemDetailsFile.exists()) {
-            Scanner fileScanner = new Scanner(itemDetailsFile);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                if (!line.trim().isEmpty()) {
-                    String[] itemDetails = line.split(";");
-                    itemList.add(new ItemDetails(
-                            itemDetails[0],
-                            itemDetails[1],
-                            itemDetails[2],
-                            Integer.parseInt(itemDetails[3]),
-                            Float.parseFloat(itemDetails[4])
-                    ));
-                }
-            }
-            fileScanner.close();
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-
-    for (ItemDetails item : itemList) {
-        if (item.getItemCode().equals(itemCode)) {
-            int updatedStock = item.getStockQuantity() - quantityDifference;
-            item.setStockQuantity(updatedStock);
-            break;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error occurred while updating item details.");
         }
     }
-
-    try {
-        try (FileWriter writer = new FileWriter("ItemDetails.txt")) {
-            for (ItemDetails item : itemList) {
-                writer.write(item.toString());
-                writer.write(System.lineSeparator());
-            }
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-        System.out.println("Error occurred while updating item details.");
-    }
-}
 }
