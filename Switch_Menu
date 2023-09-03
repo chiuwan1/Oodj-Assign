@@ -98,7 +98,7 @@ class SM_menu extends Switch_Menu {
                     DailySalesEntry(this);
                     break;
                 case 4:
-                    PurchaseRequisition.displayStockItems();
+                    PurchaseRequisition.displayLowStockItems();
                     PurchaseRequisition.generatePR();
                     break;
                 case 5:
