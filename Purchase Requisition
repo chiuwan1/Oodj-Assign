@@ -1,3 +1,8 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package oodj.assign;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -64,6 +69,39 @@ public class PurchaseRequisition {
             e.printStackTrace();
         }
     }
+    
+    public static void displayLowStockItems() {
+    try {
+        File itemDetailsFile = new File("ItemDetails.txt");
+        if (itemDetailsFile.exists()) {
+            Scanner fileScanner = new Scanner(itemDetailsFile);
+            System.out.printf("%-30s%s\n", "", "Low Stock Item List\n");
+            System.out.println("------------------------------------------------------------------------------------");
+            System.out.printf("| %-10s | %-17s | %-15s | %-15s | %-10s |\n",
+                    "Item Code", "Item Name", "Supplier ID", "Stock Quantity", "Unit Price");
+            System.out.println("------------------------------------------------------------------------------------");
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                if (!line.trim().isEmpty()) {
+                    String[] itemDetails = line.split(";");
+                    int stockQuantity = Integer.parseInt(itemDetails[3]);
+                    if (stockQuantity <= 10) {
+                        System.out.printf("| %-10s | %-17s | %-15s | %-15d | %-10s |\n",
+                                itemDetails[0], itemDetails[1], itemDetails[2],
+                                stockQuantity, itemDetails[4]);
+                    }
+                }
+            }
+            System.out.println("------------------------------------------------------------------------------------");
+            fileScanner.close();
+        } else {
+            System.out.println("Item details file not found.");
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 
     public static void generatePR() {
         String initialPRNumber = null;
@@ -276,57 +314,58 @@ public class PurchaseRequisition {
         }
         return 0.0f;
     }
+
     public static void deletePR() {
-    List<String> prList = new ArrayList<>();
-    Scanner prIdScanner = new Scanner(System.in);
-    System.out.println("Enter the PR ID to delete: ");
-    String prIdToDelete = prIdScanner.nextLine();
+        List<String> prList = new ArrayList<>();
+        Scanner prIdScanner = new Scanner(System.in);
+        System.out.println("Enter the PR ID to delete: ");
+        String prIdToDelete = prIdScanner.nextLine();
 
-    try {
-        File prDetailsFile = new File("PurchaseRequisitions.txt");
-        if (prDetailsFile.exists()) {
-            Scanner fileScanner = new Scanner(prDetailsFile);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                if (!line.trim().isEmpty()) {
-                    String[] prDetails = line.split(";");
-                    prList.add(line);
-                }
-            }
-            fileScanner.close();
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-        return;
-    }
-
-List<String> prLinesToDelete = new ArrayList<>();
-    for (String prLine : prList) {
-        String[] prDetails = prLine.split(";");
-        if (prDetails[0].equals(prIdToDelete)) {
-            prLinesToDelete.add(prLine);
-        }
-    }
-
-    if (!prLinesToDelete.isEmpty()) {
-        prList.removeAll(prLinesToDelete);
         try {
-            try (FileWriter writer = new FileWriter("PurchaseRequisitions.txt")) {
-                for (String prLine : prList) {
-                    writer.write(prLine);
-                    writer.write(System.lineSeparator());
+            File prDetailsFile = new File("PurchaseRequisitions.txt");
+            if (prDetailsFile.exists()) {
+                Scanner fileScanner = new Scanner(prDetailsFile);
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    if (!line.trim().isEmpty()) {
+                        String[] prDetails = line.split(";");
+                        prList.add(line);
+                    }
                 }
+                fileScanner.close();
             }
-            System.out.println("\nPR records deleted successfully!");
-
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error occurred while deleting the PR records.");
+            return;
         }
-    } else {
-        System.out.println("PR ID not found.");
+
+        List<String> prLinesToDelete = new ArrayList<>();
+        for (String prLine : prList) {
+            String[] prDetails = prLine.split(";");
+            if (prDetails[0].equals(prIdToDelete)) {
+                prLinesToDelete.add(prLine);
+            }
+        }
+
+        if (!prLinesToDelete.isEmpty()) {
+            prList.removeAll(prLinesToDelete);
+            try {
+                try (FileWriter writer = new FileWriter("PurchaseRequisitions.txt")) {
+                    for (String prLine : prList) {
+                        writer.write(prLine);
+                        writer.write(System.lineSeparator());
+                    }
+                }
+                System.out.println("\nPR records deleted successfully!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error occurred while deleting the PR records.");
+            }
+        } else {
+            System.out.println("PR ID not found.");
+        }
     }
-}
 
     public static void displayPRList() {
         try {
