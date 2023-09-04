@@ -1,6 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package SSB.PurchaseOrderManagementSystem;
 
-package oodj.assign;
-
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 abstract public class Switch_Menu {
@@ -13,11 +17,17 @@ abstract public class Switch_Menu {
         int SupplierEntryMenu_Input = SupplierEntryMenuInput.nextInt();
         switch (SupplierEntryMenu_Input) {
             case 1:
-            SupplierDetails.addSupplierDetail();smMenu.menu();break;
+                SupplierDetails.addSupplierDetail();
+                smMenu.menu();
+                break;
             case 2:
-            SupplierDetails.editSupplier();smMenu.menu();break;
+                SupplierDetails.editSupplier();
+                smMenu.menu();
+                break;
             case 3:
-            SupplierDetails.deleteSupplierDetail();smMenu.menu();break;
+                SupplierDetails.deleteSupplierDetail();
+                smMenu.menu();
+                break;
             case 4:
                 smMenu.menu();
                 break;
@@ -82,43 +92,46 @@ class SM_menu extends Switch_Menu {
 
     @Override
     public void menu() {
-        Scanner menuInput = new Scanner(System.in);
-        while (true) {
-            System.out.println("\nSales Manager\nMenu \n\n1. Item Entry \n2. Supplier Entry \n3. Daily Item-wise Sales Entry \n4. Create Purchase Requisition  \n5. Delete Purchase Requisition \n6. View Purchase Requisition \n7. View List of Purchase Order \n8. Exit");
-            System.out.println("Enter number to continue: \n");
-            int MenuInput = menuInput.nextInt();
-            switch (MenuInput) {
-                case 1:
-                    ItemEntryMenu(this);
-                    break;
-                case 2:
-                    SupplierEntryMenu(this);
-                    break;
-                case 3:
-                    DailySalesEntry(this);
-                    break;
-                case 4:
-                    PurchaseRequisition.displayLowStockItems();
-                    PurchaseRequisition.generatePR();
-                    break;
-                case 5:
-                    PurchaseRequisition.deletePR();
-                    ;
-                    break;
-                case 6:
-                    PurchaseRequisition.displayPRList();
-                    break;
-                case 7:
-                    PurchaseOrder.processListOFPurchaseOrder();
-                    break;
-                case 8:
-                    System.out.println("Exiting the program.");
-                    menuInput.close();
-                    return;
-                default:
-                    System.out.println("Please enter a valid option!");
-                    break;
+        try (Scanner menuInput = new Scanner(System.in)) {
+            while (true) {
+                System.out.println("\nSales Manager\nMenu \n\n1. Item Entry \n2. Supplier Entry \n3. Daily Item-wise Sales Entry \n4. Create Purchase Requisition  \n5. Delete Purchase Requisition \n6. View Purchase Requisition \n7. View List of Purchase Order \n8. Exit");
+                System.out.println("Enter number to continue: \n");
+                int MenuInput = menuInput.nextInt();
+                switch (MenuInput) {
+                    case 1:
+                        ItemEntryMenu(this);
+                        break;
+                    case 2:
+                        SupplierEntryMenu(this);
+                        break;
+                    case 3:
+                        DailySalesEntry(this);
+                        break;
+                    case 4:
+                        PurchaseRequisition.displayLowStockItems();
+                        PurchaseRequisition.generatePR();
+                        break;
+                    case 5:
+                        PurchaseRequisition.deletePR();
+                        ;
+                        break;
+                    case 6:
+                        PurchaseRequisition.displayPRList();
+                        break;
+                    case 7:
+                        PurchaseOrder.processListOFPurchaseOrder();
+                        break;
+                    case 8:
+                        System.out.println("Exiting the program.");
+                        menuInput.close();
+                        return;
+                    default:
+                        System.out.println("Please enter a valid option!");
+                        break;
+                }
             }
+        } catch (NoSuchElementException e) {
+            System.out.println("Exiting the program.");
         }
     }
 }
@@ -127,116 +140,119 @@ class PM_menu extends Switch_Menu {
 
     @Override
     public void menu() {
-        Scanner menuInput = new Scanner(System.in);
-        while (true) {
-            System.out.println("Purcahse Manager \nMenu \n\n1. Item List \n2. Supplier List \n3. Display Purchase Requisition \n4. Add Purcahse Order \n5. Delete Purchase Order \n6.View List of Purchase Order \n7. Exit ");
-            System.out.println("Enter number to continue: \n");
-            int MenuInput = menuInput.nextInt();
-            switch (MenuInput) {
-                case 1:
-                    PurchaseRequisition.displayStockItems();
-                    break;
-                case 2:
-                    DisplaySupplierList.displaySupplierList();
-                    break;
-                case 3:
-                    PurchaseRequisition.displayPRList();
-                    break;
-                case 4:
-                    PurchaseOrder.processAddPurchaseOrder();
-                    break;
-                case 5:
-                    PurchaseOrder.processDeletePurchaseOrder();
-                    break;
-                case 6:
-                    PurchaseOrder.processListOFPurchaseOrder();
-                    break;
-                case 7:
-                    System.out.println("Exiting the program.");
-                    menuInput.close();
-                    return;
-                default:
-                    System.out.println("Please enter a valid option!");
-                    break;
+        try (Scanner menuInput = new Scanner(System.in)) {
+            while (true) {
+                System.out.println("Purcahse Manager \nMenu \n\n1. Item List \n2. Supplier List \n3. Display Purchase Requisition \n4. Add Purcahse Order \n5. Delete Purchase Order \n6. View List of Purchase Order \n7. Exit ");
+                System.out.println("Enter number to continue: \n");
+                int MenuInput = menuInput.nextInt();
+                switch (MenuInput) {
+                    case 1:
+                        PurchaseRequisition.displayStockItems();
+                        break;
+                    case 2:
+                        DisplaySupplierList.displaySupplierList();
+                        break;
+                    case 3:
+                        PurchaseRequisition.displayPRList();
+                        break;
+                    case 4:
+                        PurchaseOrder.processAddPurchaseOrder();
+                        break;
+                    case 5:
+                        PurchaseOrder.processDeletePurchaseOrder();
+                        break;
+                    case 6:
+                        PurchaseOrder.processListOFPurchaseOrder();
+                        break;
+                    case 7:
+                        System.out.println("Exiting the program.");
+                        return;
+                    default:
+                        System.out.println("Please enter a valid option!");
+                        break;
+                }
             }
+        } catch (NoSuchElementException e) {
+            System.out.println("Exiting the program.");
         }
     }
+
 }
 
 class Admin_menu extends Switch_Menu {
 
     @Override
     public void menu() {
-        Scanner menuInput = new Scanner(System.in);
-        while (true) {
-            System.out.println("Admin\nMenu \n\n1. Register New User\n2. Add Item \n3. Delete Item \n4. Edit Item \n5. Add Supplier Details \n6. Edit Supplier Details  \n7. Delete Supplier \n8. Daily Item-wise Sales Entry  \n9. Delete Daily Item-wise Sales Entry  \n10. Edit Daily Item-wise Sales Entry \n11. Create Purchase Requisitionn \n12. Delete Purchase Requisition \n13. Display Purchase Requisition \n14. View List of Purchase Order \n15. View List of Items \n16. View List of Suppliers \n17. Add Purchase Order \n18. Delete Purchase Order \n19. Exit");
-            System.out.println("Enter number to continue: \n");
-            int MenuInput = menuInput.nextInt();
-            switch (MenuInput) {
-                case 1:
-                    Admin.addNewUser();
-                    break;
-                case 2:
-                    ItemDetails.AddItem();
-                    break;
-                case 3:
-                    ItemDetails.DeleteItem();
-                    break;
-                case 4:
-                    ItemDetails.EditItem();
-                    break;
-                case 5:
-                    SupplierDetails.addSupplierDetail();
-                    break;
-                case 6:
-                    SupplierDetails.editSupplier();
-                    break;                
-                case 7:
-                    SupplierDetails.deleteSupplierDetail();
-                    break;
-                case 8:
-                    DailySales.dailyItemWiseSalesEntry();
-                    break;
-                case 9:
-                    DailySales.DeleteDailySalesEntry();
-                    break;
-                case 10:
-                    DailySales.EditDailySalesEntry();
-                case 11:
-                    PurchaseRequisition.displayStockItems();
-                    PurchaseRequisition.generatePR();
-                    break;
-                case 12:
-                    PurchaseRequisition.deletePR();
-                    break;
-                case 13:           
-                    PurchaseRequisition.displayPRList();
-                    break;
-                case 14:
-                    PurchaseOrder.processListOFPurchaseOrder();
-                    break;
-                case 15:
-                    PurchaseRequisition.displayStockItems();
-                    break;
-                case 16:
-                    DisplaySupplierList.displaySupplierList();
-                    break;
-                case 17:
-                    PurchaseOrder.processAddPurchaseOrder();
-                    break;
-                case 18:
-                    PurchaseOrder.processDeletePurchaseOrder();
-                    break;
-                case 19:
-                    System.out.println("Exiting the program.");
-                    menuInput.close();
-                    return;
-                default:
-                    System.out.println("Please enter a valid option!");
-                    break;
+        try (Scanner menuInput = new Scanner(System.in)) {
+            while (true) {
+                System.out.println("Admin\nMenu \n\n1. Register New User\n2. Add Item \n3. Delete Item \n4. Edit Item \n5. Add Supplier Details \n6. Edit Supplier Details  \n7. Delete Supplier \n8. Daily Item-wise Sales Entry  \n9. Delete Daily Item-wise Sales Entry  \n10. Edit Daily Item-wise Sales Entry \n11. Create Purchase Requisitionn \n12. Delete Purchase Requisition \n13. Display Purchase Requisition \n14. View List of Purchase Order \n15. View List of Items \n16. View List of Suppliers \n17. Add Purchase Order \n18. Delete Purchase Order \n19. Exit");
+                System.out.println("Enter number to continue: \n");
+                int MenuInput = menuInput.nextInt();
+                switch (MenuInput) {
+                    case 1:
+                        Admin.addNewUser();
+                        break;
+                    case 2:
+                        ItemDetails.AddItem();
+                        break;
+                    case 3:
+                        ItemDetails.DeleteItem();
+                        break;
+                    case 4:
+                        ItemDetails.EditItem();
+                        break;
+                    case 5:
+                        SupplierDetails.addSupplierDetail();
+                        break;
+                    case 6:
+                        SupplierDetails.editSupplier();
+                        break;
+                    case 7:
+                        SupplierDetails.deleteSupplierDetail();
+                        break;
+                    case 8:
+                        DailySales.dailyItemWiseSalesEntry();
+                        break;
+                    case 9:
+                        DailySales.DeleteDailySalesEntry();
+                        break;
+                    case 10:
+                        DailySales.EditDailySalesEntry();
+                    case 11:
+                        PurchaseRequisition.displayStockItems();
+                        PurchaseRequisition.generatePR();
+                        break;
+                    case 12:
+                        PurchaseRequisition.deletePR();
+                        break;
+                    case 13:
+                        PurchaseRequisition.displayPRList();
+                        break;
+                    case 14:
+                        PurchaseOrder.processListOFPurchaseOrder();
+                        break;
+                    case 15:
+                        PurchaseRequisition.displayStockItems();
+                        break;
+                    case 16:
+                        DisplaySupplierList.displaySupplierList();
+                        break;
+                    case 17:
+                        PurchaseOrder.processAddPurchaseOrder();
+                        break;
+                    case 18:
+                        PurchaseOrder.processDeletePurchaseOrder();
+                        break;
+                    case 19:
+                        System.out.println("Exiting the program.");
+                        return;
+                    default:
+                        System.out.println("Please enter a valid option!");
+                        break;
+                }
             }
+        } catch (NoSuchElementException e) {
+            System.out.println("Exiting the program.");
         }
     }
 }
-
-
