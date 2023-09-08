@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package oodj.assign;
+package SSB.PurchaseOrderManagementSystem;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -146,6 +146,8 @@ public class PurchaseRequisition {
     }
 
     private static String generateAndSavePR(String initialPRNumber, List<PurchaseRequisition> purchaseRequisitions, String Username) {
+        
+
         // Calculate unit prices, generate PR, and save records
         try (FileWriter F1 = new FileWriter("PurchaseRequisitions.txt", true)) {
             for (PurchaseRequisition pr : purchaseRequisitions) {
@@ -373,7 +375,7 @@ public class PurchaseRequisition {
             if (prDetailsFile.exists()) {
                 Scanner fileScanner = new Scanner(prDetailsFile);
                 System.out.println("-----------------------------------");
-                System.out.printf("%-15s | %s\n", "PR ID", "PR Required Date");
+                System.out.printf("%-15s | %s\n", "PR ID", "Sales Manager");
                 System.out.println("-----------------------------------");
 
                 List<String> PrId = new ArrayList<>(); // To store unique PR IDs
@@ -383,11 +385,11 @@ public class PurchaseRequisition {
                     if (!line.trim().isEmpty()) {
                         String[] prDetails = line.split(";");
                         String prId = prDetails[0];
-                        String prDate = prDetails[3];
+                        String salesManager = prDetails[5];
 
                         if (!PrId.contains(prId)) {
                             PrId.add(prId);
-                            System.out.printf("%-15s | %s\n", prId, prDate);
+                            System.out.printf("%-15s | %s\n", prId, salesManager);
                         }
                     }
                 }
